@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#111827">
+  <title>漢字よみがなテスト</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="app-header">
+      <div>
+        <p class="eyebrow">PWA Kanji Quiz</p>
+        <h1>漢字よみがなテスト</h1>
+      </div>
+      <div class="version-box">
+        <span id="versionLabel">v0.5.0</span>
+        <button id="btnUpdate" class="ghost small" type="button">最新版に更新</button>
+      </div>
+    </header>
+
+    <main>
+      <section id="setupScreen" class="card">
+        <h2>ジャンルを選択</h2>
+
+        <label class="field-label" for="playerName">ランキング名</label>
+        <input id="playerName" class="name-input" type="text" maxlength="20" autocomplete="nickname" placeholder="名前を入力">
+
+        <label class="field-label" for="genreSelect">出題ジャンル</label>
+        <select id="genreSelect"></select>
+        <p id="csvStatus" class="muted small-text">CSV読み込み待機中...</p>
+        <div id="genreButtonList" class="genre-buttons" aria-label="ジャンル選択ボタン"></div>
+
+        <div class="grid-2">
+          <div class="info-panel">
+            <div class="info-title">問題数</div>
+            <div id="problemCount" class="big-number">0</div>
+            <div class="muted small-text">1回10問出題</div>
+          </div>
+          <div class="info-panel">
+            <div class="info-title">最高点</div>
+            <div id="bestScore" class="big-number">0</div>
+            <div class="muted small-text">この端末内に保存</div>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button id="btnStart" type="button">10問スタート</button>
+          <button id="btnPracticeAll" class="secondary" type="button">全ジャンル混合</button>
+        </div>
+
+        <section class="ranking-box">
+          <div class="section-title-row">
+            <h3>全国ランキング</h3>
+            <button id="btnRefreshRanking" class="ghost small" type="button">更新</button>
+          </div>
+          <p id="rankingStatus" class="muted small-text">ランキングURL未設定</p>
+          <div id="rankingList" class="ranking-list"></div>
+        </section>
+
+        <details class="csv-box">
+          <summary>CSVを読み込む / テンプレートを保存</summary>
+          <div class="csv-controls">
+            <label class="file-label">
+              <input id="csvFile" type="file" accept=".csv,text/csv">
+              CSVファイルを選択
+            </label>
+            <button id="btnDownloadTemplate" class="secondary" type="button">CSVテンプレート保存</button>
+          </div>
+        </details>
+      </section>
+
+      <section id="quizScreen" class="card hidden">
+        <div class="quiz-top">
+          <div>
+            <div class="muted small-text">問題</div>
+            <div id="progressLabel" class="progress-label">1 / 10</div>
+          </div>
+          <div class="timer-box">
+            <div class="muted small-text">経過</div>
+            <div id="timerLabel">0.0秒</div>
+          </div>
+          <div class="timer-box">
+            <div class="muted small-text">点数</div>
+            <div id="scoreLabel">0</div>
+          </div>
+        </div>
+
+        <div class="question-card">
+          <div id="genreBadge" class="badge">ジャンル</div>
+          <div id="kanjiQuestion" class="kanji">漢字</div>
+        </div>
+
+        <label class="field-label" for="answerInput">よみがなを入力</label>
+        <input id="answerInput" type="text" inputmode="kana" autocomplete="off" autocapitalize="off" placeholder="ひらがなで入力してEnter">
+
+        <div id="feedback" class="feedback" aria-live="polite"></div>
+
+        <div class="actions quiz-actions">
+          <button id="btnSubmit" type="button">回答する</button>
+          <button id="btnPass" class="secondary" type="button">パス</button>
+          <button id="btnQuit" class="ghost" type="button">中断</button>
+        </div>
+      </section>
+
+      <section id="resultScreen" class="card hidden">
+        <h2>結果</h2>
+        <div class="result-grid">
+          <div class="info-panel">
+            <div class="info-title">正答数</div>
+            <div id="resultCorrect" class="big-number">0 / 10</div>
+          </div>
+          <div class="info-panel">
+            <div class="info-title">合計点</div>
+            <div id="resultScore" class="big-number">0</div>
+          </div>
+          <div class="info-panel">
+            <div class="info-title">平均回答時間</div>
+            <div id="resultAvgTime" class="big-number">0.0秒</div>
+          </div>
+        </div>
+        <div id="bestNotice" class="best-notice hidden">最高点を更新しました！</div>
+
+        <section class="ranking-box result-ranking">
+          <div class="section-title-row">
+            <h3>全国ランキング登録</h3>
+            <button id="btnSubmitRanking" type="button">ランキングに登録</button>
+          </div>
+          <p id="rankingSubmitStatus" class="muted small-text">名前を入力して登録できます。</p>
+        </section>
+
+        <div id="reviewList" class="review-list"></div>
+        <div class="actions">
+          <button id="btnRetry" type="button">同じジャンルでもう一度</button>
+          <button id="btnBackHome" class="secondary" type="button">ジャンル選択に戻る</button>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="app.js" defer></script>
+</body>
+</html>
