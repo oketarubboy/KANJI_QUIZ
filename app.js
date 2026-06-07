@@ -6,7 +6,7 @@ const MAX_SPEED_BONUS = 500;
 
 // Google Apps Script のウェブアプリURLを入れると全国ランキングが有効になります。
 // 例: const RANKING_API_URL = "https://script.google.com/macros/s/AKfycb.../exec";
-const RANKING_API_URL = "";
+const RANKING_API_URL = "https://script.google.com/macros/s/AKfycbz3T1PZ5EbnmPqxYUUIwd9cQ0fExGwWl2IV2E7Y1oKm14kv_7vRTvZDnLOl3Bc94RvLBQ/exec";
 const RANKING_LIMIT = 20;
 
 const $ = (id) => document.getElementById(id);
