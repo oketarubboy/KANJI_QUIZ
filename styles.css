@@ -100,13 +100,14 @@ select:focus, input[type="text"]:focus { border-color: var(--accent-2); box-shad
 .csv-controls { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 14px; }
 .file-label { display: inline-flex; align-items: center; justify-content: center; border: 1px solid var(--line); border-radius: 16px; padding: 13px 16px; background: #334155; color: var(--text); font-weight: 800; cursor: pointer; }
 .file-label input { display: none; }
-.quiz-top { display: grid; grid-template-columns: 1fr auto auto; gap: 12px; align-items: center; margin-bottom: 18px; }
-.progress-label, #timerLabel, #scoreLabel { font-size: 24px; font-weight: 900; }
-.timer-box { text-align: right; }
-.question-card { position: relative; min-height: 250px; border-radius: 26px; border: 1px solid var(--line); background: radial-gradient(circle at center, rgba(251,191,36,.14), rgba(15,23,42,.54)); display: flex; align-items: center; justify-content: center; padding: 42px 16px; }
-.badge { position: absolute; top: 16px; left: 16px; border: 1px solid rgba(251,191,36,.4); color: var(--accent-2); border-radius: 999px; padding: 6px 12px; font-weight: 800; background: rgba(15,23,42,.72); }
-.kanji { font-family: "Yu Mincho", "Hiragino Mincho ProN", serif; font-size: clamp(62px, 16vw, 152px); font-weight: 900; letter-spacing: .06em; text-align: center; line-height: 1.1; }
-.feedback { min-height: 52px; margin-top: 14px; font-weight: 800; font-size: 18px; text-align: center; }
+.quiz-top { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; align-items: stretch; margin-bottom: 10px; }
+.quiz-stat { text-align: center; border: 1px solid var(--line); border-radius: 14px; padding: 8px 6px; background: rgba(15,23,42,.50); }
+.progress-label, #timerLabel, #scoreLabel { font-size: clamp(18px, 5vw, 24px); font-weight: 900; line-height: 1.1; }
+.timer-box { text-align: center; }
+.question-card { position: relative; min-height: 138px; border-radius: 22px; border: 1px solid var(--line); background: radial-gradient(circle at center, rgba(251,191,36,.14), rgba(15,23,42,.54)); display: flex; align-items: center; justify-content: center; padding: 26px 12px 18px; }
+.badge { position: absolute; top: 8px; left: 8px; border: 1px solid rgba(251,191,36,.4); color: var(--accent-2); border-radius: 999px; padding: 3px 8px; font-weight: 800; font-size: 12px; background: rgba(15,23,42,.72); max-width: calc(100% - 16px); overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.kanji { font-family: "Yu Mincho", "Hiragino Mincho ProN", serif; font-size: clamp(42px, 13vw, 96px); font-weight: 900; letter-spacing: .04em; text-align: center; line-height: 1.05; overflow-wrap: anywhere; }
+.feedback { min-height: 36px; margin-top: 8px; font-weight: 800; font-size: 16px; text-align: center; }
 .feedback.ok { color: var(--ok); }
 .feedback.ng { color: var(--danger); }
 .quiz-actions button { flex-basis: 130px; }
@@ -121,9 +122,9 @@ select:focus, input[type="text"]:focus { border-color: var(--accent-2); box-shad
   .app-header { align-items: flex-start; }
   .version-box { flex-direction: column; align-items: flex-end; }
   .grid-2, .result-grid { grid-template-columns: 1fr; }
-  .quiz-top { grid-template-columns: 1fr 1fr; }
-  .timer-box:last-child { grid-column: 1 / -1; text-align: left; }
-  .question-card { min-height: 210px; }
+  .quiz-top { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
+  .quiz-stat { padding: 7px 4px; border-radius: 12px; }
+  .question-card { min-height: 108px; padding: 22px 8px 12px; border-radius: 18px; }
   .review-item { grid-template-columns: 1fr; }
 }
 
@@ -143,4 +144,50 @@ select:focus, input[type="text"]:focus { border-color: var(--accent-2); box-shad
   .ranking-meta { grid-column: 2 / -1; }
   .section-title-row { align-items: flex-start; }
   .section-title-row h3 { font-size: 18px; }
+}
+
+
+body.quiz-mode {
+  min-height: 100svh;
+  background: var(--bg);
+}
+body.quiz-mode .app-header {
+  display: none;
+}
+body.quiz-mode .app-shell {
+  padding: 8px 10px 12px;
+}
+body.quiz-mode #quizScreen {
+  padding: 10px;
+  border-radius: 18px;
+}
+body.quiz-mode .field-label {
+  margin: 10px 0 6px;
+  font-size: 13px;
+}
+body.quiz-mode input[type="text"] {
+  font-size: clamp(20px, 6vw, 28px);
+  padding: 11px 12px;
+  border-radius: 14px;
+}
+body.quiz-mode .actions {
+  margin-top: 8px;
+  gap: 8px;
+}
+body.quiz-mode .actions button {
+  padding: 10px 12px;
+  border-radius: 13px;
+  flex-basis: 90px;
+}
+body.quiz-mode .quiz-actions {
+  flex-wrap: nowrap;
+}
+body.quiz-mode .small-text {
+  font-size: 11px;
+}
+@media (max-width: 380px) {
+  body.quiz-mode .app-shell { padding: 6px; }
+  body.quiz-mode #quizScreen { padding: 8px; }
+  .kanji { font-size: clamp(36px, 12vw, 72px); }
+  body.quiz-mode .actions button { padding: 9px 8px; font-size: 14px; }
 }

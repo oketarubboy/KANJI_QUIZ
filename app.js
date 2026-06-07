@@ -1,4 +1,4 @@
-const APP_VERSION = "v0.5.0";
+const APP_VERSION = "v0.6.0";
 const QUESTIONS_PER_ROUND = 10;
 const SPEED_BONUS_LIMIT_SECONDS = 15;
 const BASE_POINT = 1000;
@@ -6,7 +6,7 @@ const MAX_SPEED_BONUS = 500;
 
 // Google Apps Script のウェブアプリURLを入れると全国ランキングが有効になります。
 // 例: const RANKING_API_URL = "https://script.google.com/macros/s/AKfycb.../exec";
-const RANKING_API_URL = "https://script.google.com/macros/s/AKfycbz3T1PZ5EbnmPqxYUUIwd9cQ0fExGwWl2IV2E7Y1oKm14kv_7vRTvZDnLOl3Bc94RvLBQ/exec";
+const RANKING_API_URL = "";
 const RANKING_LIMIT = 20;
 
 const $ = (id) => document.getElementById(id);
@@ -287,7 +287,13 @@ function renderQuestion() {
   $("genreBadge").textContent = activeGenre === "__ALL__" ? "全ジャンル混合" : activeGenre;
   $("kanjiQuestion").textContent = q.kanji;
   $("answerInput").value = "";
-  $("answerInput").focus();
+  setTimeout(() => {
+    try {
+      $("answerInput").focus({ preventScroll: true });
+    } catch (err) {
+      $("answerInput").focus();
+    }
+  }, 0);
 }
 
 function submitAnswer() {
@@ -418,6 +424,8 @@ function stopTimer() {
 
 function showScreen(id) {
   ["setupScreen", "quizScreen", "resultScreen"].forEach((screenId) => $(screenId).classList.toggle("hidden", screenId !== id));
+  document.body.classList.toggle("quiz-mode", id === "quizScreen");
+  window.scrollTo(0, 0);
 }
 
 function backToSetup() {
