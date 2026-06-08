@@ -1,4 +1,4 @@
-const CACHE_NAME = "kanji-test-pwa-v0.6.0";
+const CACHE_NAME = "kanji-test-pwa-v0.7.0";
 const ASSETS = [
   "./",
   "./index.html",

@@ -1,4 +1,4 @@
-const APP_VERSION = "v0.6.0";
+const APP_VERSION = "v0.7.0";
 const QUESTIONS_PER_ROUND = 10;
 const SPEED_BONUS_LIMIT_SECONDS = 15;
 const BASE_POINT = 1000;
@@ -6,7 +6,7 @@ const MAX_SPEED_BONUS = 500;
 
 // Google Apps Script のウェブアプリURLを入れると全国ランキングが有効になります。
 // 例: const RANKING_API_URL = "https://script.google.com/macros/s/AKfycb.../exec";
-const RANKING_API_URL = "https://script.google.com/macros/s/AKfycbz3T1PZ5EbnmPqxYUUIwd9cQ0fExGwWl2IV2E7Y1oKm14kv_7vRTvZDnLOl3Bc94RvLBQ/exec";
+const RANKING_API_URL = "";
 const RANKING_LIMIT = 20;
 
 const $ = (id) => document.getElementById(id);
@@ -27,7 +27,7 @@ let lastRoundSummary = null;
 let rankingSubmitted = false;
 
 const truthyValues = new Set(["1", "true", "TRUE", "yes", "YES", "y", "Y", "○", "〇", "◯", "あり", "有", "on", "ON"]);
-const GENRE_ORDER = ["1年生", "2年生", "3年生", "4年生", "5年生", "6年生", "BLEACH", "ファントムシータ", "四字熟語", "難読", "地名"];
+const GENRE_ORDER = ["1年生", "2年生", "3年生", "4年生", "5年生", "6年生", "BLEACH", "鬼滅の刃", "ファントムシータ", "四字熟語", "難読", "地名"];
 
 window.addEventListener("DOMContentLoaded", async () => {
   $("versionLabel").textContent = APP_VERSION;
@@ -164,7 +164,7 @@ function rowToProblem(headers, cols, flagColumns, rowNumber) {
     id: obj.id || `row-${rowNumber}`,
     kanji: obj.kanji,
     yomi: obj.yomi,
-    note: obj.note || obj.memo || "",
+    note: cleanNote(obj.note || obj.memo || ""),
     genres: Array.from(new Set(problemGenres.filter(Boolean))),
   };
 }
@@ -175,6 +175,18 @@ function normalizeAlpha(value) {
 
 function splitMulti(value) {
   return String(value || "").split(/[;|、,／/]/).map((s) => s.trim()).filter(Boolean);
+}
+
+function cleanNote(value) {
+  return String(value || "")
+    .replace(/追加[:：]/g, "")
+    .trim();
+}
+
+function formatProblemGenre(problem) {
+  const genrePart = activeGenre === "__ALL__" ? problem.genres.join("・") : activeGenre;
+  const notePart = cleanNote(problem.note);
+  return [genrePart, notePart].filter(Boolean).join(" / ");
 }
 
 function compareGenre(a, b) {
@@ -284,7 +296,7 @@ function renderQuestion() {
   questionStartedAt = performance.now();
   $("progressLabel").textContent = `${currentIndex + 1} / ${QUESTIONS_PER_ROUND}`;
   $("scoreLabel").textContent = score.toLocaleString();
-  $("genreBadge").textContent = activeGenre === "__ALL__" ? "全ジャンル混合" : activeGenre;
+  $("genreBadge").textContent = formatProblemGenre(q) || (activeGenre === "__ALL__" ? "全ジャンル混合" : activeGenre);
   $("kanjiQuestion").textContent = q.kanji;
   $("answerInput").value = "";
   setTimeout(() => {
@@ -489,7 +501,17 @@ function parseCsv(text) {
 }
 
 function downloadTemplateCsv() {
-  const csv = "id,kanji,yomi,flag_1年生,flag_2年生,flag_3年生,flag_4年生,flag_5年生,flag_6年生,flag_BLEACH,flag_ファントムシータ,flag_四字熟語,flag_難読,flag_地名,note\n1,山,やま,1,,,,,,,,,,,小学1年\n2,銀行,ぎんこう,,,,1,,,,,,,,小学4年目安\n3,卍解,ばんかい,,,,,,,1,,,,,BLEACHジャンル例\n4,第6十刃,ぐりむじょーじゃがーじゃっく,,,,,,,1,,,,,BLEACHジャンル例\n5,幻視,びじょん,,,,,,,,1,,,,ファントムシータ例\n6,一期一会,いちごいちえ,,,,,,,,,1,,,四字熟語ジャンル例\n7,紫陽花,あじさい,,,,,,,,,,1,,難読漢字ジャンル例\n8,北海道,ほっかいどう,,,,,,,,,,,1,地名ジャンル例\n";
+  const csv = [
+    "id,kanji,yomi,flag_1年生,flag_2年生,flag_3年生,flag_4年生,flag_5年生,flag_6年生,flag_BLEACH,flag_鬼滅の刃,flag_ファントムシータ,flag_四字熟語,flag_難読,flag_地名,note",
+    "1,山,やま,1,,,,,,,,,,,,教育漢字",
+    "2,銀行,ぎんこう,,,,1,,,,,,,,,小学4年目安",
+    "3,卍解,ばんかい,,,,,,,1,,,,,,卍解",
+    "4,竈門炭治郎,かまどたんじろう,,,,,,,,1,,,,,人物名",
+    "5,幻視,びじょん,,,,,,,,,1,,,,ファントムシータ例",
+    "6,一期一会,いちごいちえ,,,,,,,,,,1,,,四字熟語",
+    "7,紫陽花,あじさい,,,,,,,,,,,1,,難読漢字",
+    "8,北海道,ほっかいどう,,,,,,,,,,,,1,地名"
+  ].join("\n") + "\n";
   const blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8" });
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
